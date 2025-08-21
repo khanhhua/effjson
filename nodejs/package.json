@@ -1,0 +1,21 @@
+{
+  "name": "effjson-nodejs",
+  "version": "0.0.1",
+  "description": "Efficient JSON inflation and deflation",
+  "keywords": [
+    "JSON"
+  ],
+  "license": "ISC",
+  "author": "Khanh Hua",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "test": "node --import tsx src/*.spec.ts"
+  },
+  "dependencies": {
+    "tsx": "^4.20.4"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0"
+  }
+}
