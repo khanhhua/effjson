@@ -6,13 +6,18 @@ export interface Meta {
 export type Datum = string | number | null;
 
 export interface Deflation {
-  headers: Meta[];
+  schema: {
+    root: Meta[];
+    [k: string]: Meta[];
+  };
   data: Datum[];
 }
 
-export function deflate(input: object): Deflation {
+export function deflate(input: object, level: number = 0): Deflation {
   const deflation = {
-    headers: [],
+    schema: {
+      root: [],
+    },
     data: []
   } as Deflation;
   const headerSet = new Set<String>();
@@ -23,17 +28,38 @@ export function deflate(input: object): Deflation {
     const entries = Object.entries(item);
 
     for (const [k, v] of entries) {
-      if (!headerSet.has(k)) {
-        deflation.headers.push({
+      if (isObject(v)) {
+        const sub = deflate(v as object, level + 1);
+        deflation.schema.root.push({
           name: k,
-          type: typeof (v),
+          type: `@${k}`
         });
-        headerSet.add(k);
-      }
 
-      deflation.data.push(v as Datum);
+        const { root: subRoot, ...rest } = sub.schema;
+        deflation.schema = {
+          ...deflation.schema,
+          ...rest,
+          [`@${k}`]: subRoot
+        }
+
+        deflation.data.push(...sub.data);
+      } else {
+        if (!headerSet.has(k)) {
+          deflation.schema.root.push({
+            name: k,
+            type: typeof (v),
+          });
+          headerSet.add(k);
+        }
+
+        deflation.data.push(v as Datum);
+      }
     }
   }
 
   return deflation;
+}
+
+function isObject(value: any) {
+  return Object.prototype.toString.call(value) === '[object Object]';
 }
