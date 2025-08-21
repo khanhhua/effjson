@@ -10,11 +10,11 @@
   "type": "module",
   "main": "index.ts",
   "scripts": {
-    "test": "node --import tsx src/*.spec.ts"
+    "test": "npx tsx src/*.spec.ts"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@types/node": "^24.3.0",
     "tsx": "^4.20.4",
-    "@types/node": "^24.3.0"
+    "typescript": "^5.9.2"
   }
 }
