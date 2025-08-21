@@ -12,10 +12,9 @@
   "scripts": {
     "test": "node --import tsx src/*.spec.ts"
   },
-  "dependencies": {
-    "tsx": "^4.20.4"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "tsx": "^4.20.4",
     "@types/node": "^24.3.0"
   }
 }

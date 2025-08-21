@@ -16,5 +16,5 @@ jobs:
       - name: Run test cases
         run: |
           cd nodejs
-          npm install && npm test
+          npm install -D && npm test
 
