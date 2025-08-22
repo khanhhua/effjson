@@ -22,8 +22,9 @@ export function inflate({ schema, data }: Deflation): object[] {
 export function readin(metalist: Meta[], schema: Schema, refHead: [number], data: Datum[]): object {
   let result = {} as { [k: string]: any };
 
-  const [head] = refHead;
   for (const { name, type } of metalist) {
+    const [head] = refHead;
+
     if (type === PrimitiveType.StringType) {
       result[name] = parse(type, data.at(head) as Datum);
       refHead[0] += 1;
