@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-import { deflate } from './index.ts';
+import { deflate } from './deflate.js';
 
 describe('deflate non-nested single object', () => {
   it('deflate empty object', () => {

@@ -1,17 +1,7 @@
-export interface Meta {
-  name: string;
-  type: string;
-}
-
-export type Datum = string | number | null;
-
-export interface Deflation {
-  schema: {
-    root: Meta[];
-    [k: string]: Meta[];
-  };
-  data: Datum[];
-}
+import type {
+  Datum,
+  Deflation,
+} from './types';
 
 export function deflate(input: object, level: number = 0): Deflation {
   const deflation = {
