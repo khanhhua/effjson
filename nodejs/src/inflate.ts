@@ -3,9 +3,9 @@ import type {
   Deflation,
   Meta,
   Schema
-} from './types.d.ts';
+} from './types';
 
-import { PrimitiveType } from './types';
+import { Flag, PrimitiveType } from './types';
 
 export function inflate({ schema, data }: Deflation): object[] {
   const result = <any>[];
@@ -22,20 +22,42 @@ export function inflate({ schema, data }: Deflation): object[] {
 export function readin(metalist: Meta[], schema: Schema, refHead: [number], data: Datum[]): object {
   let result = {} as { [k: string]: any };
 
-  for (const { name, type } of metalist) {
-    const [head] = refHead;
+  for (const { name, type, flag } of metalist) {
+    if (flag === Flag.Single) {
+      const [head] = refHead;
 
-    if (type === PrimitiveType.StringType) {
-      result[name] = parse(type, data.at(head) as Datum);
-      refHead[0] += 1;
-    } else if (type === PrimitiveType.NumberType) {
-      result[name] = parse(type, data.at(head) as Datum);
-      refHead[0] += 1;
-    } else {
-      const subMetalist = schema[type];
-      if (!subMetalist) throw new Error('TypeDeflationError');
+      if (type === PrimitiveType.StringType || type === PrimitiveType.NumberType) {
+        result[name] = parse(type, data.at(head) as Datum);
+        refHead[0] += 1;
+      } else {
+        const subMetalist = schema[type];
+        if (!subMetalist) throw new Error('TypeDeflationError');
 
-      result[name] = readin(subMetalist, schema, refHead, data);
+        result[name] = readin(subMetalist, schema, refHead, data);
+      }
+    } else if (flag === Flag.Multiple) {
+      const [head] = refHead;
+      const size = data.at(head) as number;
+
+      if (!size) throw new Error('TypeDeflationError');
+
+      refHead[0] += 1;
+
+      if (type === PrimitiveType.StringType || type === PrimitiveType.NumberType) {
+        const sliced = <any[]>data.slice(refHead[0], refHead[0] + size);
+        result[name] = sliced.map(item => parse(type, item));
+
+        refHead[0] += size;
+      } else {
+        const subMetalist = schema[type];
+        if (!subMetalist) throw new Error('TypeDeflationError');
+
+        const list = new Array(size);
+        for (let i = 0; i < size; i++) {
+          list[i] = readin(subMetalist, schema, refHead, data);
+        }
+        result[name] = list;
+      }
     }
   }
 
