@@ -2,9 +2,9 @@ import assert from 'node:assert';
 import type {
   Datum,
   Deflation,
+  Schema
 } from './types';
 import { Flag } from './types';
-import type { Meta, Schema } from './types.js';
 
 export function deflate(input: object, level: number = 0): Deflation {
   const deflation = {

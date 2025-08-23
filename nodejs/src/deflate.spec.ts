@@ -205,6 +205,39 @@ describe('deflate 2nd degree nested homogenous object', () => {
     });
   });
 
+  it('deflate string: [string: array of [string:string; string: string array of size 1]] map', () => {
+    const actual = deflate({
+      room: {
+        students: [
+          { name: 'Tom', colors: ['blue'] },
+          { name: 'Jerry', colors: ['orange'] }
+        ]
+      }
+    });
+
+    assert.deepStrictEqual(actual.schema.root, [{
+      name: 'room',
+      type: '@room',
+      flag: 0
+    }]);
+    assert.deepStrictEqual(actual.schema['@room'], [{
+      name: 'students',
+      type: '@students',
+      flag: 1
+    }]);
+    assert.deepStrictEqual(actual.schema['@students'], [{
+      name: 'name',
+      type: 'string',
+      flag: 0
+    },
+    {
+      name: 'colors',
+      type: 'string',
+      flag: 1
+    }]);
+    assert.deepStrictEqual(actual.data, [2, 'Tom', 1, 'blue', 'Jerry', 1, 'orange']);
+  });
+
   it('deflate string: [string: array of [string:string; string: string array]] map', () => {
     const actual = deflate({
       room: {
