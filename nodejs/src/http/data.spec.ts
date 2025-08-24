@@ -2,6 +2,7 @@ import assert from 'node:assert';
 import { describe, it } from 'node:test';
 import { encodeData } from './data';
 import { decodeData } from './data.js';
+import type { Datum } from '../types';
 
 describe('data serialization as http body compatible text', () => {
   it('serialize single element list of number', () => {
@@ -10,7 +11,7 @@ describe('data serialization as http body compatible text', () => {
   });
 
   it('serialize multiple element list of number', () => {
-    const actual = encodeData([1, 2, 3]);
+    const actual = encodeData(<Datum[]>[1, 2, 3]);
     assert.deepStrictEqual(actual, '1 2 3');
   });
 
