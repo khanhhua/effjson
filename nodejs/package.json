@@ -10,7 +10,7 @@
   "type": "module",
   "main": "index.ts",
   "scripts": {
-    "test": "node --import tsx --test src/**.spec.ts"
+    "test": "node --import tsx --test src/*.spec.ts src/*/*.spec.ts"
   },
   "devDependencies": {
     "@types/node": "^24.3.0",
