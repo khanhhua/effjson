@@ -5,12 +5,23 @@
   "keywords": [
     "JSON"
   ],
-  "license": "ISC",
   "author": "Khanh Hua",
   "type": "module",
-  "main": "index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/*.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "import": {
+      "types": "./dist/types.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "license": "ISC",
   "scripts": {
-    "test": "node --import tsx --test src/*.spec.ts src/*/*.spec.ts"
+    "test": "node --import tsx --test src/*.spec.ts src/*/*.spec.ts",
+    "build": "rm -R dist && tsc -p tsconfig.prod.json"
   },
   "devDependencies": {
     "@types/node": "^24.3.0",

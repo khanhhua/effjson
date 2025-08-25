@@ -6,20 +6,21 @@
     "outDir": "./dist",
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "nodenext",
-    "target": "esnext",
+    "module": "es2022",
+    "target": "es2022",
     "types": [
       "node"
     ],
-    "moduleResolution": "node16",
+    "moduleResolution": "Bundler",
     // For nodejs:
-    // "lib": ["esnext"],
-    // "types": ["node"],
+    "lib": [
+      "es2022"
+    ],
     // and npm install -D @types/node
     // Other Outputs
     "sourceMap": true,
     "declaration": true,
-    "declarationMap": true,
+    "declarationMap": false,
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
