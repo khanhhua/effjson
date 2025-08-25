@@ -272,3 +272,36 @@ describe('deflate 2nd degree nested homogenous object', () => {
   });
 });
 
+describe.only('deflate nested root', () => {
+  it('enforces meta uniqueness', () => {
+    const raw = [
+      {
+        id: 1, friends: [
+          { name: 'Tom', hobbies: ['Fishing', 'Movies'] },
+          { name: 'Bull', hobbies: ['Relaxing', 'Chasing Tom'] }
+        ]
+      },
+      { id: 2, friends: [{ name: 'Jerry', hobbies: ['Cheese', 'Traps'] }] }
+    ];
+
+    const actual = deflate(raw);
+    assert.deepStrictEqual(actual.schema.root, [{
+      name: 'id',
+      type: 'number',
+      flag: 0
+    }, {
+      name: 'friends',
+      type: '@friends',
+      flag: 1
+    }], 'Root schema should match');
+    assert.deepStrictEqual(actual.schema['@friends'], [{
+      name: 'name',
+      type: 'string',
+      flag: 0
+    }, {
+      name: 'hobbies',
+      type: 'string',
+      flag: 1
+    }]);
+  })
+})
