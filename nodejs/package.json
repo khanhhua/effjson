@@ -21,6 +21,7 @@
   "license": "ISC",
   "scripts": {
     "test": "node --import tsx --test src/*.spec.ts src/*/*.spec.ts",
+    "test:file": "node --import tsx --test",
     "build": "rm -R dist && tsc -p tsconfig.prod.json"
   },
   "devDependencies": {

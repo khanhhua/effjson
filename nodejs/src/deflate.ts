@@ -23,17 +23,24 @@ export function deflate(input: object, level: number = 0): Deflation {
     for (const [k, v] of entries) {
       if (isObject(v)) {
         const sub = deflate(v as object, level + 1);
-        deflation.schema.root.push({
-          name: k,
-          type: `@${k}`,
-          flag: Flag.Single
-        });
+
+        if (!deflation.schema.root.find(item => item.name === k)) {
+          deflation.schema.root.push({
+            name: k,
+            type: `@${k}`,
+            flag: Flag.Single
+          });
+        }
 
         const { root: subRoot, ...rest } = sub.schema;
         deflation.schema = {
           ...deflation.schema,
-          ...rest,
           [`@${k}`]: subRoot
+        };
+
+        for (const [t, u] of Object.entries(rest)) {
+          if (t in deflation.schema) continue;
+          deflation.schema[t] = u;
         }
 
         deflation.data.push(...sub.data);
@@ -41,17 +48,24 @@ export function deflate(input: object, level: number = 0): Deflation {
         const array = <any[]>v;
         if (isObject(array[0])) {
           const sub = deflateArray(v as object[], level + 1);
-          deflation.schema.root.push({
-            name: k,
-            type: `@${k}`,
-            flag: Flag.Multiple
-          });
+          if (!deflation.schema.root.find(item => item.name === k)) {
+            deflation.schema.root.push({
+              name: k,
+              type: `@${k}`,
+              flag: Flag.Multiple
+            });
+          }
 
           const { root: subRoot, ...rest } = sub.schema;
+
           deflation.schema = {
             ...deflation.schema,
-            ...rest,
             [`@${k}`]: subRoot
+          };
+
+          for (const [t, u] of Object.entries(rest)) {
+            if (t in deflation.schema) continue;
+            deflation.schema[t] = u;
           }
 
           deflation.data.push(...sub.data);
